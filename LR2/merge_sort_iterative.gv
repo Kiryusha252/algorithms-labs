@@ -1,0 +1,32 @@
+digraph IterativeMergeSort {
+    node [shape=box, style="rounded,filled", fontname="Times New Roman"];
+    edge [fontname="Times New Roman", fontsize=10];
+
+    root [label="Початковий масив\n[28, 76, 27, 10, 5, 35, 95, 16, 33]", fillcolor="#FFE0B2"];
+
+    m1 [label="Злиття [28] та [76]\n[28, 76]", fillcolor="#C8E6C9"];
+    m2 [label="Злиття [27] та [10]\n[10, 27]", fillcolor="#C8E6C9"];
+    m3 [label="Злиття [5] та [35]\n[5, 35]", fillcolor="#C8E6C9"];
+    m4 [label="Злиття [95] та [16]\n[16, 95]", fillcolor="#C8E6C9"];
+    
+    m5 [label="Злиття [28, 76] та [10, 27]\n[10, 27, 28, 76]", fillcolor="#C8E6C9"];
+    m6 [label="Злиття [5, 35] та [16, 95]\n[5, 16, 35, 95]", fillcolor="#C8E6C9"];
+    
+    m7 [label="Злиття [10, 27, 28, 76] та [5, 16, 35, 95]\n[5, 10, 16, 27, 28, 35, 76, 95]", fillcolor="#C8E6C9"];
+    m8 [label="Злиття [5, 10, 16, 27, 28, 35, 76, 95] та [33]\n[5, 10, 16, 27, 28, 33, 35, 76, 95]", fillcolor="#C8E6C9"];
+
+    root -> m1 [style=dotted];
+    root -> m2 [style=dotted];
+    root -> m3 [style=dotted];
+    root -> m4 [style=dotted];
+
+    m1 -> m5 [label="Злиття", style=dashed];
+    m2 -> m5 [label="Злиття", style=dashed];
+    m3 -> m6 [label="Злиття", style=dashed];
+    m4 -> m6 [label="Злиття", style=dashed];
+
+    m5 -> m7 [label="Злиття", style=dashed];
+    m6 -> m7 [label="Злиття", style=dashed];
+    
+    m7 -> m8 [label="Фінальне злиття", style=bold];
+}

@@ -1,0 +1,67 @@
+digraph QuicksortTrace {
+    node [shape=rect, style="rounded", fontname="Times New Roman"];
+    edge [fontname="Times New Roman", fontsize=10];
+
+    subgraph cluster_main {
+        label="Основний виклик";
+        style=solid;
+        root [label="[28, 76, 27, 10, 5, 35, 95, 16, 33]"];
+    }
+
+    subgraph cluster_left {
+        label="Лівий підмасив";
+        style=solid;
+        
+        L1 [label="[16, 5, 27, 10]"];
+        L2_1 [label="[10, 5]"];
+        L2_2 [label="[27, 16]"];
+        
+        L3_1 [label="[5]"];
+        L3_2 [label="[10]"];
+        
+        L3_3 [label="[16]"];
+        L3_4 [label="[27]"];
+        
+        L1 -> L2_1 [label="l=0, r=1"];
+        L1 -> L2_2 [label="l=2, r=3"];
+        
+        L2_1 -> L3_1 [label="l=0, r=0"];
+        L2_1 -> L3_2 [label="l=1, r=1"];
+        
+        L2_2 -> L3_3 [label="l=2, r=2"];
+        L2_2 -> L3_4 [label="l=3, r=3"];
+    }
+
+    subgraph cluster_right {
+        label="Правий підмасив";
+        style=solid;
+        
+        R1 [label="[76, 35, 95, 28, 33]"];
+        R2_1 [label="[33, 35, 28]"];
+        R2_2 [label="[95, 76]"];
+        
+        R3_1 [label="[28]"];
+        R3_2 [label="[35, 33]"];
+        
+        R4_1 [label="[33]"];
+        R4_2 [label="[35]"];
+        
+        R3_3 [label="[76]"];
+        R3_4 [label="[95]"];
+        
+        R1 -> R2_1 [label="l=4, r=6"];
+        R1 -> R2_2 [label="l=7, r=8"];
+        
+        R2_1 -> R3_1 [label="l=4, r=4"];
+        R2_1 -> R3_2 [label="l=5, r=6"];
+        
+        R3_2 -> R4_1 [label="l=5, r=5"];
+        R3_2 -> R4_2 [label="l=6, r=6"];
+        
+        R2_2 -> R3_3 [label="l=7, r=7"];
+        R2_2 -> R3_4 [label="l=8, r=8"];
+    }
+
+    root -> L1 [label="l=0, r=3"];
+    root -> R1 [label="l=4, r=8"];
+}

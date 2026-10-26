@@ -1,0 +1,70 @@
+digraph RecursiveMergeSort {
+    node [shape=box, fontname="Times New Roman"];
+    edge [fontname="Times New Roman", fontsize=9];
+
+    subgraph cluster_split {
+        label="Етап розділення";
+        style=dashed;
+        
+        node0 [label="Початковий виклик\n[28, 76, 27, 10, 5, 35, 95, 16, 33]"];
+        
+        nodeL1 [label="[28, 76, 27, 10]"];
+        nodeR1 [label="[5, 35, 95, 16, 33]"];
+        
+        nodeL2_1 [label="[28, 76]"];
+        nodeL2_2 [label="[27, 10]"];
+        nodeR2_1 [label="[5, 35]"];
+        nodeR2_2 [label="[95, 16, 33]"];
+        
+        nodeL3_1 [label="[28]"]; nodeL3_2 [label="[76]"];
+        nodeL3_3 [label="[27]"]; nodeL3_4 [label="[10]"];
+        nodeR3_1 [label="[5]"]; nodeR3_2 [label="[35]"];
+        nodeR3_3 [label="[95]"]; nodeR3_4 [label="[16, 33]"];
+        
+        nodeR4_1 [label="[16]"]; nodeR4_2 [label="[33]"];
+
+        node0 -> nodeL1 [label="ліва частина"];
+        node0 -> nodeR1 [label="права частина"];
+        
+        nodeL1 -> nodeL2_1; nodeL1 -> nodeL2_2;
+        nodeR1 -> nodeR2_1; nodeR1 -> nodeR2_2;
+        
+        nodeL2_1 -> nodeL3_1; nodeL2_1 -> nodeL3_2;
+        nodeL2_2 -> nodeL3_3; nodeL2_2 -> nodeL3_4;
+        
+        nodeR2_1 -> nodeR3_1; nodeR2_1 -> nodeR3_2;
+        nodeR2_2 -> nodeR3_3; nodeR2_2 -> nodeR3_4;
+        
+        nodeR3_4 -> nodeR4_1; nodeR3_4 -> nodeR4_2;
+    }
+
+    subgraph cluster_merge {
+        label="Етап злиття";
+        style=dotted;
+        
+        m_nodeL2_1 [label="[28, 76]"];
+        m_nodeL2_2 [label="[10, 27]"];
+        m_nodeR2_1 [label="[5, 35]"];
+        m_nodeR3_4 [label="[16, 33]"];
+        
+        m_nodeR2_2 [label="[16, 33, 95]"];
+        
+        m_nodeL1 [label="[10, 27, 28, 76]"];
+        m_nodeR1 [label="[5, 16, 33, 35, 95]"];
+        
+        m_final [label="[5, 10, 16, 27, 28, 33, 35, 76, 95]"];
+        
+        nodeL3_1 -> m_nodeL2_1 [style=dotted]; nodeL3_2 -> m_nodeL2_1 [style=dotted];
+        nodeL3_3 -> m_nodeL2_2 [style=dotted]; nodeL3_4 -> m_nodeL2_2 [style=dotted];
+        
+        nodeR3_1 -> m_nodeR2_1 [style=dotted]; nodeR3_2 -> m_nodeR2_1 [style=dotted];
+        nodeR4_1 -> m_nodeR3_4 [style=dotted]; nodeR4_2 -> m_nodeR3_4 [style=dotted];
+        
+        nodeR3_3 -> m_nodeR2_2 [style=dotted]; m_nodeR3_4 -> m_nodeR2_2 [style=dotted];
+        
+        m_nodeL2_1 -> m_nodeL1 [style=dotted]; m_nodeL2_2 -> m_nodeL1 [style=dotted];
+        m_nodeR2_1 -> m_nodeR1 [style=dotted]; m_nodeR2_2 -> m_nodeR1 [style=dotted];
+        
+        m_nodeL1 -> m_final [style=dotted]; m_nodeR1 -> m_final [style=dotted];
+    }
+}

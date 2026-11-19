@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <stdbool.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#define V 8          // Кількість вершин графа 
+#define INF INT_MAX  // Нескінченність
+
+// Матриця ваг графа 
+int graph[V + 1][V + 1];
+
+// Допоміжна функція для додавання неорієнтованого ребра
+void addEdge(int u, int v, int weight) {
+    graph[u][v] = weight;
+    graph[v][u] = weight;
+}
+
+int ExtractMinFromPQ(int dist[], bool inPQ[], int *pqSize) {
+    int minVal = INF;
+    int minVertex = -1;
+
+    for (int v = 1; v <= V; v++) {
+        if (inPQ[v] && dist[v] < minVal) {
+            minVal = dist[v];
+            minVertex = v;
+        }
+    }
+
+    if (minVertex != -1) {
+        inPQ[minVertex] = false;
+        (*pqSize)--;
+    }
+    return minVertex;
+}
+
+// Рекурсивний вивід шляху від стартової вершини до v
+void printPath(int pred[], int v) {
+    if (pred[v] == -1) {
+        printf("%d", v);
+        return;
+    }
+    printPath(pred, pred[v]);
+    printf(" -> %d", v);
+}
+
+void Dijkstra(int s) {
+    int pred[V + 1];
+    int dist[V + 1];
+    bool inPQ[V + 1];
+    int pqSize = 0;
+
+    //Ініціалізація
+    for (int v = 1; v <= V; v++) {
+        pred[v] = -1;
+        if (v != s) {
+            dist[v] = INF;
+        } else {
+            dist[v] = 0;
+        }
+        inPQ[v] = true; // InsertInPQ(pq, v, dist[v])
+        pqSize++;
+    }
+
+    //Основний цикл
+    while (pqSize != 0) {
+        int u = ExtractMinFromPQ(dist, inPQ, &pqSize);
+        if (u == -1) break;
+
+        // Перебір суміжних вершин
+        for (int v = 1; v <= V; v++) {
+            if (graph[u][v] != 0 && inPQ[v]) {
+                // Умова релаксації (рядок 14)
+                if (dist[u] != INF && dist[v] > dist[u] + graph[u][v]) {
+                    dist[v] = dist[u] + graph[u][v];
+                    pred[v] = u;
+                    // UpdatePQ виконується автоматично через оновлення dist[v]
+                }
+            }
+        }
+    }
+
+    //Вивід результатів
+    printf("Найкоротші шляхи від вершини %d (алгоритм Дейкстри):\n", s);
+    printf("--------------------------------------------------\n");
+    printf("| З верш. | В верш. | Шлях              | Вага   |\n");
+    printf("--------------------------------------------------\n");
+    for (int v = 1; v <= V; v++) {
+        if (v == s) continue;
+        printf("|    %d    |    %d    | ", s, v);
+        printPath(pred, v);
+        // Вирівнювання для красивої таблиці
+        printf("\t\t|   %2d   |\n", dist[v]);
+    }
+    printf("--------------------------------------------------\n");
+}
+
+int main() {
+    #ifdef _WIN32
+    SetConsoleOutputCP(65001); // Для коректного відображення української в консолі
+    #endif
+
+    // Ініціалізація матриці нулями
+    for (int i = 1; i <= V; i++)
+        for (int j = 1; j <= V; j++)
+            graph[i][j] = 0;
+
+    //Задаємо ребра графа
+    addEdge(1, 2, 8);
+    addEdge(1, 3, 2);
+    addEdge(1, 4, 4);
+    addEdge(2, 5, 6);
+    addEdge(2, 6, 3);
+    addEdge(3, 4, 6);
+    addEdge(3, 6, 5);
+    addEdge(3, 8, 4);
+    addEdge(4, 5, 1);
+    addEdge(5, 7, 4);
+    addEdge(6, 7, 2);
+    addEdge(7, 8, 5);
+
+    int startNode = 1;
+    Dijkstra(startNode);
+
+    return 0;
+}

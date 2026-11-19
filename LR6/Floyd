@@ -1,0 +1,92 @@
+#include <stdio.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#define N 8         // Кількість вершин графа 
+#define INF 99999   // Умовна нескінченність 
+
+// Допоміжна функція для додавання неорієнтованого ребра
+void addEdge(int W[N + 1][N + 1], int u, int v, int weight) {
+    W[u][v] = weight;
+    W[v][u] = weight;
+}
+
+void Floyd(int W[N + 1][N + 1], int D[N + 1][N + 1]) {
+    // D <- W
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= N; j++) {
+            D[i][j] = W[i][j];
+        }
+    }
+
+    // Основний потрійний цикл
+    for (int k = 1; k <= N; k++) {
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
+                if (D[i][k] + D[k][j] < D[i][j]) {
+                    D[i][j] = D[i][k] + D[k][j];
+                }
+            }
+        }
+    }
+}
+
+// Вивід матриці відстаней
+void printMatrix(int D[N + 1][N + 1]) {
+    printf("   ");
+    for (int j = 1; j <= N; j++) {
+        printf("%4d", j);
+    }
+    printf("\n");
+
+    for (int i = 1; i <= N; i++) {
+        printf("%2d:", i);
+        for (int j = 1; j <= N; j++) {
+            if (D[i][j] == INF) {
+                printf(" INF");
+            } else {
+                printf("%4d", D[i][j]);
+            }
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    #ifdef _WIN32
+    SetConsoleOutputCP(65001);
+    #endif
+
+    int W[N + 1][N + 1];
+    int D[N + 1][N + 1];
+
+    // Ініціалізація початкової вагової матриці W
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= N; j++) {
+            W[i][j] = (i == j) ? 0 : INF;
+        }
+    }
+
+    //ребра графа 
+    addEdge(W, 1, 2, 8);
+    addEdge(W, 1, 3, 2);
+    addEdge(W, 1, 4, 4);
+    addEdge(W, 2, 5, 6);
+    addEdge(W, 2, 6, 3);
+    addEdge(W, 3, 4, 6);
+    addEdge(W, 3, 6, 5);
+    addEdge(W, 3, 8, 4);
+    addEdge(W, 4, 5, 1);
+    addEdge(W, 5, 7, 4);
+    addEdge(W, 6, 7, 2);
+    addEdge(W, 7, 8, 5);
+
+    Floyd(W, D);
+
+    printf("Матриця найкоротших відстаней D (алгоритм Флойда):\n");
+    printMatrix(D);
+
+    return 0;
+}
